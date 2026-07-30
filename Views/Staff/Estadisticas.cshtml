@@ -1,0 +1,183 @@
+﻿@model IEnumerable<DepartamentoEstadisticaViewModel>
+
+@{
+    ViewData["Title"] = "Estadísticas por Departamento";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mb-4">📊 Estadísticas de Personal por Departamento</h2>
+            <hr />
+        </div>
+    </div>
+
+    <!-- Si no hay datos -->
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-warning" role="alert">
+            No hay datos de empleados activos para mostrar estadísticas.
+        </div>
+    }
+    else
+    {
+        <!-- CARDS POR DEPARTAMENTO -->
+        <div class="row mb-5">
+            @foreach (var dept in Model)
+            {
+                <!-- Determinar color según departamento -->
+                
+                    string cardBorderClass = dept.Departamento switch
+                    {
+                        "Tecnología" => "border-info",
+                        "Recursos Humanos" => "border-success",
+                        "Finanzas" => "border-warning",
+                        "Operaciones" => "border-secondary",
+                        _ => "border-dark"
+                    };
+
+                    string badgeClass = dept.Departamento switch
+                    {
+                        "Tecnología" => "bg-info",
+                        "Recursos Humanos" => "bg-success",
+                        "Finanzas" => "bg-warning",
+                        "Operaciones" => "bg-secondary",
+                        _ => "bg-dark"
+                    };
+                
+
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="card border-3 @cardBorderClass shadow">
+                        <div class="card-header @badgeClass text-white">
+                            <h5 class="mb-0">@dept.Departamento</h5>
+                        </div>
+                        <div class="card-body">
+                            <!-- Total de empleados -->
+                            <div class="mb-3">
+                                <span class="text-muted">Empleados:</span>
+                                <h4 class="text-primary">@dept.TotalEmpleados</h4>
+                            </div>
+
+                            <!-- Total de nómina -->
+                            <div class="mb-3">
+                                <span class="text-muted">Total Nómina:</span>
+                                <h5 class="text-success">@dept.TotalNomina.ToString("C")</h5>
+                            </div>
+
+                            <!-- Salario promedio -->
+                            <div>
+                                <span class="text-muted">Salario Promedio:</span>
+                                <h6 class="text-secondary">@dept.SalarioPromedio.ToString("C")</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- TABLA RESUMEN DETALLADA -->
+        <div class="row">
+            <div class="col-12">
+                <h4 class="mt-5 mb-3">📋 Tabla Resumen</h4>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover table-bordered">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Departamento</th>
+                                <th>Total Empleados</th>
+                                <th>Total Nómina</th>
+                                <th>Salario Promedio</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var dept in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <strong>@dept.Departamento</strong>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-primary">@dept.TotalEmpleados</span>
+                                    </td>
+                                    <td>
+                                        <strong class="text-success">@dept.TotalNomina.ToString("C")</strong>
+                                    </td>
+                                    <td>
+                                        @dept.SalarioPromedio.ToString("C")
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot class="table-light">
+                            <tr>
+                                <td><strong>TOTAL GENERAL</strong></td>
+                                <td>
+                                    <strong class="badge bg-primary">
+                                        @{
+                                            int totalEmpleados = Model.Sum(m => m.TotalEmpleados);
+                                        }
+                                        @totalEmpleados
+                                    </strong>
+                                </td>
+                                <td>
+                                    <strong class="text-success">
+                                        @{
+                                            decimal totalNomina = Model.Sum(m => m.TotalNomina);
+                                        }
+                                        @totalNomina.ToString("C")
+                                    </strong>
+                                </td>
+                                <td>
+                                    @{
+                                        decimal promedioGeneral = Model.Average(m => m.SalarioPromedio);
+                                    }
+                                    <strong>@promedioGeneral.ToString("C")</strong>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- INSIGHTS (datos interesantes) -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <h4 class="mb-3">💡 Insights</h4>
+                @{
+                    var deptMasEmpleados = Model.OrderByDescending(m => m.TotalEmpleados).FirstOrDefault();
+                    var deptMasNomina = Model.OrderByDescending(m => m.TotalNomina).FirstOrDefault();
+                    var deptMayorSalarioPromedio = Model.OrderByDescending(m => m.SalarioPromedio).FirstOrDefault();
+                }
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <div class="alert alert-info">
+                            <strong>👥 Más Empleados:</strong><br />
+                            @deptMasEmpleados.Departamento (@deptMasEmpleados.TotalEmpleados empleados)
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="alert alert-success">
+                            <strong>💰 Mayor Inversión en Nómina:</strong><br />
+                            @deptMasNomina.Departamento (@deptMasNomina.TotalNomina.ToString("C"))
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="alert alert-warning">
+                            <strong>📈 Mayor Salario Promedio:</strong><br />
+                            @deptMayorSalarioPromedio.Departamento (@deptMayorSalarioPromedio.SalarioPromedio.ToString("C"))
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Botón para volver -->
+    <div class="mt-4">
+        <a asp-action="Index" class="btn btn-secondary">
+            ← Volver a Personal
+        </a>
+    </div>
+</div>

@@ -1,0 +1,90 @@
+﻿@model Staff
+
+@{
+    ViewData["Title"] = "Crear Empleado";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title mb-4">Crear Nuevo Empleado</h2>
+
+                    <!-- Mostrar errores del servidor -->
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <!-- Formulario que hace POST a StaffController/Create -->
+                    <form method="post">
+                        <div class="mb-3">
+                            <label asp-for="Nombre" class="form-label">Nombre</label>
+                            <!-- asp-for vincula al campo Nombre del modelo Staff -->
+                            <input type="text" class="form-control" asp-for="Nombre" />
+                            <!-- Mostrar errores específicos de validación -->
+                            <span asp-validation-for="Nombre" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Cedula" class="form-label">Cédula</label>
+                            <!-- asp-for vincula al campo Cedula del modelo Staff -->
+                            <input type="text" class="form-control" asp-for="Cedula" />
+                            <!-- Mostrar errores específicos de validación -->
+                            <span asp-validation-for="Cedula" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Cargo" class="form-label">Cargo</label>
+                            <!-- asp-for vincula al campo Cargo del modelo Staff -->
+                            <input type="text" class="form-control" asp-for="Cargo" />
+                            <!-- Mostrar errores específicos de validación -->
+                            <span asp-validation-for="Cargo" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Departamento" class="form-label">Departamento</label>
+                            <!-- SELECT con los 4 departamentos posibles -->
+                            <select class="form-control" asp-for="Departamento">
+                                <option value="">-- Selecciona un departamento --</option>
+                                <option value="Recursos Humanos">Recursos Humanos</option>
+                                <option value="Tecnología">Tecnología</option>
+                                <option value="Finanzas">Finanzas</option>
+                                <option value="Operaciones">Operaciones</option>
+                            </select>
+                            <!-- Mostrar errores específicos de validación -->
+                            <span asp-validation-for="Departamento" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Salario" class="form-label">Salario (RD$)</label>
+                            <!-- asp-for vincula al campo Salario del modelo Staff -->
+                            <input type="number" step="0.01" class="form-control" asp-for="Salario" />
+                            <!-- Mostrar errores específicos de validación (incluye validación de rango) -->
+                            <span asp-validation-for="Salario" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="FechaIngreso" class="form-label">Fecha de Ingreso</label>
+                            <!-- asp-for vincula al campo FechaIngreso del modelo Staff -->
+                            <input type="date" class="form-control" asp-for="FechaIngreso" />
+                            <!-- Mostrar errores específicos de validación -->
+                            <span asp-validation-for="FechaIngreso" class="text-danger"></span>
+                        </div>
+
+                        <!-- Botones de acción -->
+                        <div class="mb-3">
+                            <button type="submit" class="btn btn-success">Guardar</button>
+                            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts de validación -->
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

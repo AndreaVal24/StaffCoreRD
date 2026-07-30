@@ -1,0 +1,58 @@
+﻿@model Staff
+
+@{
+    ViewData["Title"] = "Eliminar Empleado";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0">Eliminar Empleado</h4>
+                </div>
+                <div class="card-body">
+                    <!-- Advertencia -->
+                    <div class="alert alert-warning" role="alert">
+                        <strong>⚠️ Advertencia:</strong> Esta acción no se puede deshacer. ¿Estás seguro de que deseas eliminar este empleado?
+                    </div>
+
+                    <!-- MOSTRAR DATOS DEL EMPLEADO (solo lectura, no editable) -->
+                    <dl class="row">
+                        <dt class="col-sm-4">Nombre:</dt>
+                        <dd class="col-sm-8">@Model.Nombre</dd>
+
+                        <dt class="col-sm-4">Cédula:</dt>
+                        <dd class="col-sm-8">@Model.Cedula</dd>
+
+                        <dt class="col-sm-4">Cargo:</dt>
+                        <dd class="col-sm-8">@Model.Cargo</dd>
+
+                        <dt class="col-sm-4">Departamento:</dt>
+                        <dd class="col-sm-8">@Model.Departamento</dd>
+
+                        <dt class="col-sm-4">Salario:</dt>
+                        <dd class="col-sm-8">@Model.Salario.ToString("C")</dd>
+
+                        <dt class="col-sm-4">Fecha de Ingreso:</dt>
+                        <dd class="col-sm-8">@Model.FechaIngreso.ToString("dd/MM/yyyy")</dd>
+                    </dl>
+
+                    <!-- FORMULARIO POST para confirmar eliminación -->
+                    <form method="post">
+                        <!-- INPUT HIDDEN: Pasar el ID para que DeleteConfirmed sepa cuál empleado eliminar -->
+                        <input type="hidden" asp-for="Id" />
+
+                        <!-- Botones de acción -->
+                        <div class="mb-3">
+                            <!-- Botón Eliminar: hace POST a StaffController/Delete con el ID -->
+                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                            <!-- Botón Cancelar: vuelve al Index sin eliminar -->
+                            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

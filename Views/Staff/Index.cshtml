@@ -1,0 +1,124 @@
+﻿@model IEnumerable<Staff>
+
+@{
+    ViewData["Title"] = "Personal";
+}
+
+<div class="container mt-5">
+    <h2>Gestión de Personal</h2>
+    <hr />
+
+
+    <!-- BUSCADOR EN TIEMPO REAL -->
+    <div class="mb-4">
+        <div class="input-group">
+            <span class="input-group-text">🔍</span>
+            <input type="text" id="buscador" class="form-control" placeholder="Buscar por nombre..." />
+        </div>
+        <small class="text-muted">Escribe para filtrar el personal por nombre</small>
+    </div>
+
+    <!-- BOTÓN "+ NUEVO" - Solo visible para Admin y RRHH -->
+    @if (User.IsInRole("Administrador") || User.IsInRole("RRHH"))
+    {
+        <!-- BOTONES DE ACCIÓN -->
+        <div class="mb-3">
+            <!-- BOTÓN "+ NUEVO" - Solo visible para Admin y RRHH -->
+            @if (User.IsInRole("Administrador") || User.IsInRole("RRHH"))
+            {
+                <a asp-action="Create" class="btn btn-success me-2">+ Nuevo Empleado</a>
+            }
+
+            <!-- BOTÓN "ESTADÍSTICAS" - Visible para todos -->
+            <a asp-action="Estadisticas" class="btn btn-info">📊 Ver Estadísticas</a>
+        </div>
+    }
+
+    <!-- SI LA LISTA ESTÁ VACÍA: mostrar mensaje -->
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-info" role="alert">
+            No hay empleados registrados.
+        </div>
+    }
+    else
+    {
+        <!-- TABLA DE PERSONAL -->
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Nombre</th>
+                    <th>Cargo</th>
+                    <th>Departamento</th>
+                    <th>Salario</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- LOOP: Recorrer cada empleado -->
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Nombre</td>
+                        <td>@item.Cargo</td>
+                        <td>@item.Departamento</td>
+                        <td>@item.Salario.ToString("C")</td>
+                        <td>
+                            <!-- BOTÓN VER DETALLES - Visible para todos los autenticados -->
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">Detalles</a>
+
+                            <!-- BOTÓN EDITAR - Visible para Admin y RRHH -->
+                            @if (User.IsInRole("Administrador") || User.IsInRole("RRHH"))
+                            {
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Editar</a>
+                            }
+
+                            <!-- BOTÓN ELIMINAR - Visible solo para Admin -->
+                            @if (User.IsInRole("Administrador"))
+                            {
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Eliminar</a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <!-- FOOTER: Total de nómina -->
+            <tfoot class="table-light">
+                <tr>
+                    <td colspan="3"><strong>Total Nómina:</strong></td>
+                    <td>
+                        <strong>
+                            @{
+                                decimal total = Model.Sum(s => s.Salario);
+                            }
+                            @total.ToString("C")
+                        </strong>
+                    </td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+    }
+</div>
+
+<!-- SCRIPT: Filtrado en tiempo real sin recargar página -->
+@section Scripts {
+    <script>
+        document.getElementById('buscador').addEventListener('oninput', function() {
+            const filtro = this.value.toLowerCase();
+            const filas = document.querySelectorAll('tbody tr');
+
+            filas.forEach(fila => {
+                // Obtener el nombre de la primera columna
+                const nombre = fila.cells[0].textContent.toLowerCase();
+
+                // Mostrar u ocultar según el filtro
+                if (nombre.includes(filtro)) {
+                    fila.style.display = '';
+                } else {
+                    fila.style.display = 'none';
+                }
+            });
+        });
+    </script>
+}

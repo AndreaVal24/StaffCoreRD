@@ -1,0 +1,98 @@
+﻿@model Staff
+
+@{
+    ViewData["Title"] = "Detalles del Empleado";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                <!-- Header con color azul y nombre del empleado -->
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">📋 Perfil de Empleado</h3>
+                </div>
+
+                <div class="card-body">
+                    <!-- Información personal en formato de descripción -->
+                    <dl class="row">
+                        <dt class="col-sm-4"><strong>Nombre:</strong></dt>
+                        <dd class="col-sm-8">@Model.Nombre</dd>
+
+                        <dt class="col-sm-4"><strong>Cédula:</strong></dt>
+                        <dd class="col-sm-8">@Model.Cedula</dd>
+
+                        <dt class="col-sm-4"><strong>Cargo:</strong></dt>
+                        <dd class="col-sm-8">@Model.Cargo</dd>
+
+                        <dt class="col-sm-4"><strong>Departamento:</strong></dt>
+                        <dd class="col-sm-8">
+                            <!-- Badge con color según departamento -->
+                            @{
+                                string badgeClass = Model.Departamento switch
+                                {
+                                    "Tecnología" => "bg-info",
+                                    "Recursos Humanos" => "bg-success",
+                                    "Finanzas" => "bg-warning",
+                                    "Operaciones" => "bg-secondary",
+                                    _ => "bg-dark"
+                                };
+                            }
+                            <span class="badge @badgeClass">@Model.Departamento</span>
+                        </dd>
+
+                        <dt class="col-sm-4"><strong>Salario:</strong></dt>
+                        <dd class="col-sm-8">
+                            <strong class="text-success">@Model.Salario.ToString("C")</strong>
+                        </dd>
+
+                        <dt class="col-sm-4"><strong>Fecha de Ingreso:</strong></dt>
+                        <dd class="col-sm-8">@Model.FechaIngreso.ToString("dd/MM/yyyy")</dd>
+
+                        <dt class="col-sm-4"><strong>Estado:</strong></dt>
+                        <dd class="col-sm-8">
+                            <!-- Badge verde si activo, rojo si inactivo -->
+                            @if (Model.Activo)
+                            {
+                                <span class="badge bg-success">✓ Activo</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">✗ Inactivo</span>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-4"><strong>ID:</strong></dt>
+                        <dd class="col-sm-8"><code>@Model.Id</code></dd>
+                    </dl>
+
+                    <hr />
+
+                    <!-- Botones de acción -->
+                    <div class="mt-4">
+                        <!-- Botón Editar - solo Admin y RRHH -->
+                        @if (User.IsInRole("Administrador") || User.IsInRole("RRHH"))
+                        {
+                            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning me-2">
+                                ✏️ Editar
+                            </a>
+                        }
+
+                        <!-- Botón Eliminar - solo Admin -->
+                        @if (User.IsInRole("Administrador"))
+                        {
+                            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger me-2">
+                                🗑️ Eliminar
+                            </a>
+                        }
+
+                        <!-- Botón Volver a la lista -->
+                        <a asp-action="Index" class="btn btn-secondary">
+                            ← Volver a la Lista
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

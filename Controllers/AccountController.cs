@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using StaffCoreRD.Models.ViewModels;  // AGREGAR ESTA LÍNEA AL TOP
+using StaffCoreRD.Models;
 
 namespace StaffCoreRD.Controllers
 {
