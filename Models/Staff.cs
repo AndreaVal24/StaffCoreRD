@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace StaffCoreRD.Models
 {
@@ -23,7 +23,7 @@ namespace StaffCoreRD.Models
         [Range(23223, double.MaxValue, ErrorMessage = "Mínimo RD$23,223")]
         public decimal Salario { get; set; }
 
-        public DateTime FechaIngreso { get; set; }
+        public DateTime FechaIngreso { get; set; } = DateTime.Today;
 
         public bool Activo { get; set; } = true;
     }

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<DepartamentoEstadisticaViewModel>
+@model IEnumerable<DepartamentoEstadisticaViewModel>
 
 @{
     ViewData["Title"] = "Estadísticas por Departamento";
@@ -78,7 +78,7 @@
         <!-- TABLA RESUMEN DETALLADA -->
         <div class="row">
             <div class="col-12">
-                <h4 class="mt-5 mb-3">📋 Tabla Resumen</h4>
+                <h4 class="mt-5 mb-3">Tabla Resumen</h4>
                 <div class="table-responsive">
                     <table class="table table-striped table-hover table-bordered">
                         <thead class="table-dark">
@@ -143,30 +143,70 @@
         <!-- INSIGHTS (datos interesantes) -->
         <div class="row mt-5">
             <div class="col-12">
-                <h4 class="mb-3">💡 Insights</h4>
+                <h4 class="mb-3">Insights</h4>
                 @{
-                    var deptMasEmpleados = Model.OrderByDescending(m => m.TotalEmpleados).FirstOrDefault();
-                    var deptMasNomina = Model.OrderByDescending(m => m.TotalNomina).FirstOrDefault();
-                    var deptMayorSalarioPromedio = Model.OrderByDescending(m => m.SalarioPromedio).FirstOrDefault();
+                    var totalDepts = Model.Count();
+                    
+                    var maxEmpleados = Model.Max(m => m.TotalEmpleados);
+                    var deptsMasEmpleados = Model.Where(m => m.TotalEmpleados == maxEmpleados).ToList();
+                    
+                    var maxNomina = Model.Max(m => m.TotalNomina);
+                    var deptsMasNomina = Model.Where(m => m.TotalNomina == maxNomina).ToList();
+                    
+                    var maxSalarioPromedio = Model.Max(m => m.SalarioPromedio);
+                    var deptsMayorSalarioPromedio = Model.Where(m => m.SalarioPromedio == maxSalarioPromedio).ToList();
                 }
 
                 <div class="row">
                     <div class="col-md-4 mb-3">
                         <div class="alert alert-info">
-                            <strong>👥 Más Empleados:</strong><br />
-                            @deptMasEmpleados.Departamento (@deptMasEmpleados.TotalEmpleados empleados)
+                            <strong>Más Empleados:</strong><br />
+                            @if (deptsMasEmpleados.Count == totalDepts && totalDepts > 1)
+                            {
+                                <span>Todos tienen la misma cantidad (@maxEmpleados empleados)</span>
+                            }
+                            else if (deptsMasEmpleados.Count > 1)
+                            {
+                                <span>Empate: @string.Join(", ", deptsMasEmpleados.Select(d => d.Departamento)) (@maxEmpleados empleados)</span>
+                            }
+                            else
+                            {
+                                <span>@deptsMasEmpleados.First().Departamento (@maxEmpleados empleados)</span>
+                            }
                         </div>
                     </div>
                     <div class="col-md-4 mb-3">
                         <div class="alert alert-success">
-                            <strong>💰 Mayor Inversión en Nómina:</strong><br />
-                            @deptMasNomina.Departamento (@deptMasNomina.TotalNomina.ToString("C"))
+                            <strong>Mayor Inversión en Nómina:</strong><br />
+                            @if (deptsMasNomina.Count == totalDepts && totalDepts > 1)
+                            {
+                                <span>Todos tienen igual nómina (@maxNomina.ToString("C"))</span>
+                            }
+                            else if (deptsMasNomina.Count > 1)
+                            {
+                                <span>Empate: @string.Join(", ", deptsMasNomina.Select(d => d.Departamento)) (@maxNomina.ToString("C"))</span>
+                            }
+                            else
+                            {
+                                <span>@deptsMasNomina.First().Departamento (@maxNomina.ToString("C"))</span>
+                            }
                         </div>
                     </div>
                     <div class="col-md-4 mb-3">
                         <div class="alert alert-warning">
-                            <strong>📈 Mayor Salario Promedio:</strong><br />
-                            @deptMayorSalarioPromedio.Departamento (@deptMayorSalarioPromedio.SalarioPromedio.ToString("C"))
+                            <strong>Mayor Salario Promedio:</strong><br />
+                            @if (deptsMayorSalarioPromedio.Count == totalDepts && totalDepts > 1)
+                            {
+                                <span>Promedios iguales en todos (@maxSalarioPromedio.ToString("C"))</span>
+                            }
+                            else if (deptsMayorSalarioPromedio.Count > 1)
+                            {
+                                <span>Empate: @string.Join(", ", deptsMayorSalarioPromedio.Select(d => d.Departamento)) (@maxSalarioPromedio.ToString("C"))</span>
+                            }
+                            else
+                            {
+                                <span>@deptsMayorSalarioPromedio.First().Departamento (@maxSalarioPromedio.ToString("C"))</span>
+                            }
                         </div>
                     </div>
                 </div>
