@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using StaffCoreRD.Models;
 
 namespace StaffCoreRD.Data
 {
-    public class StaffDbContext : IdentityDbContext
+    public class StaffDbContext : IdentityDbContext<IdentityUser>
     {
         public StaffDbContext(DbContextOptions<StaffDbContext> options) : base(options)
         {

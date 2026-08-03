@@ -18,9 +18,7 @@
         <small class="text-muted">Escribe para filtrar el personal por nombre</small>
     </div>
 
-    <!-- BOTÓN "+ NUEVO" - Solo visible para Admin y RRHH -->
-    @if (User.IsInRole("Administrador") || User.IsInRole("RRHH"))
-    {
+   
         <!-- BOTONES DE ACCIÓN -->
         <div class="mb-3">
             <!-- BOTÓN "+ NUEVO" - Solo visible para Admin y RRHH -->
@@ -32,7 +30,7 @@
             <!-- BOTÓN "ESTADÍSTICAS" - Visible para todos -->
             <a asp-action="Estadisticas" class="btn btn-info">📊 Ver Estadísticas</a>
         </div>
-    }
+    
 
     <!-- SI LA LISTA ESTÁ VACÍA: mostrar mensaje -->
     @if (Model == null || !Model.Any())
@@ -104,7 +102,7 @@
 <!-- SCRIPT: Filtrado en tiempo real sin recargar página -->
 @section Scripts {
     <script>
-        document.getElementById('buscador').addEventListener('oninput', function() {
+        document.getElementById('buscador').addEventListener('input', function() {
             const filtro = this.value.toLowerCase();
             const filas = document.querySelectorAll('tbody tr');
 

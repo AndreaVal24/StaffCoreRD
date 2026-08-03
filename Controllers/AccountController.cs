@@ -41,13 +41,12 @@ namespace StaffCoreRD.Controllers
                 var userCount = _userManager.Users.Count();
 
                 if (userCount == 1)
-                {
                     await _userManager.AddToRoleAsync(user, "Administrador");
-                }
+                else if (userCount == 2)
+                    await _userManager.AddToRoleAsync(user, "RRHH");
                 else
-                {
                     await _userManager.AddToRoleAsync(user, "Viewer");
-                }
+
 
                 // Iniciar sesión automáticamente
                 await _signInManager.SignInAsync(user, isPersistent: false);

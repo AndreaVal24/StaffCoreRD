@@ -10,6 +10,7 @@ namespace StaffCoreRD.Models
         public string Nombre { get; set; }
 
         [Required]
+        [RegularExpression(@"^\d{3}-\d{7}-\d{1}$", ErrorMessage = "Formato: 001-0000000-0")]
         public string Cedula { get; set; }
 
         [Required]
